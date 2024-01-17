@@ -1,9 +1,8 @@
 const { prisma } = require("../prisma/prisma-client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const messages = require("./constants");
+const messages = require("../messages");
 /**
- *
  * @route POST /api/user/login
  * @desc Login user with email and password
  * @access Public
@@ -11,7 +10,7 @@ const messages = require("./constants");
 const login = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email.trim() || !password.trim()) {
+  if (!email || !email.trim() || !password || !password.trim()) {
     return res.status(400).json({ message: messages.REQUIRED_MESSAGE });
   }
 
@@ -36,7 +35,6 @@ const login = async (req, res) => {
 };
 
 /**
- *
  * @route POST /api/user/register
  * @desc Register user
  * @access Public
@@ -44,7 +42,14 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   const { email, password, name } = req.body;
 
-  if (!email.trim() || !password.trim() || !name.trim()) {
+  if (
+    !email ||
+    !email.trim() ||
+    !password ||
+    !password.trim() ||
+    !name ||
+    !name.trim()
+  ) {
     return res.status(400).json({ message: messages.REQUIRED_MESSAGE });
   }
   const registeredUser = await prisma.user.findFirst({
@@ -58,7 +63,7 @@ const register = async (req, res) => {
   }
 
   const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hash(password, salt);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
   const user = await prisma.user.create({
     data: {
@@ -81,8 +86,24 @@ const register = async (req, res) => {
   return res.status(400).json({ message: messages.REGISTER_ERROR });
 };
 
+/**
+ * @route GET /api/user/current
+ * @desc Get current logged user
+ * @access Private
+ */
 const currentUser = async (req, res) => {
-  res.send("current user");
+  const secret = process.env.JWT_SECRET;
+  const user = req.user;
+
+  if (!secret) {
+    return res.status(400).json({ message: messages.UNAUTHORIZED });
+  }
+  return res.status(200).json({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    token: jwt.sign({ id: user.id }, secret, { expiresIn: "30d" }),
+  });
 };
 
 module.exports = {
