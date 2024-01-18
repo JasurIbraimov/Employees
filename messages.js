@@ -3,6 +3,8 @@ const LOGIN_ERROR = "Email or password are incorrect!";
 const ALREADY_REGISTERED = "User with that email is already exist!";
 const REGISTER_ERROR = "Registration failed! Please try again...";
 const UNAUTHORIZED = "Unauthorized!";
+const SERVER_ERROR = "Something went wrong... Please try again!";
+const NOT_FOUND = "Employee not found...";
 
 module.exports = {
   REQUIRED_MESSAGE,
@@ -10,4 +12,6 @@ module.exports = {
   ALREADY_REGISTERED,
   REGISTER_ERROR,
   UNAUTHORIZED,
+  SERVER_ERROR,
+  NOT_FOUND,
 };

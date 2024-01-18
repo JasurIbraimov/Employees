@@ -4,13 +4,13 @@ const auth = require("../middlewares/auth");
 
 const router = Router();
 
-// api/user/login
+// /api/user/login
 router.post("/login", login);
 
-// api/user/register
+// /api/user/register
 router.post("/register", register);
 
-// api/user/current
+// /api/user/current
 router.get("/current", auth, currentUser);
 
 module.exports = router;
