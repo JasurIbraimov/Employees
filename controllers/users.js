@@ -20,7 +20,9 @@ const login = async (req, res) => {
         email,
       },
     });
-
+    if (!user) {
+      return res.status(404).json({ message: messages.UNKNOWN_USER });
+    }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     const secret = process.env.JWT_SECRET;
 
@@ -83,7 +85,6 @@ const register = async (req, res) => {
 
     if (user && secret) {
       return res.status(201).json({
-        id: user.id,
         name: user.name,
         email: user.email,
         token: jwt.sign({ id: user.id }, secret, { expiresIn: "30d" }),
@@ -110,7 +111,6 @@ const currentUser = async (req, res) => {
       return res.status(400).json({ message: messages.UNAUTHORIZED });
     }
     return res.status(200).json({
-      id: user.id,
       name: user.name,
       email: user.email,
       token: jwt.sign({ id: user.id }, secret, { expiresIn: "30d" }),
