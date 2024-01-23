@@ -126,7 +126,7 @@ const updateEmployee = async (req, res) => {
     if (!id || !id.trim()) {
       return res.status(404).json({ message: messages.NOT_FOUND });
     }
-
+    console.log(id);
     const employee = await prisma.employee.update({
       where: {
         id,

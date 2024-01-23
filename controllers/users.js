@@ -111,6 +111,7 @@ const currentUser = async (req, res) => {
       return res.status(400).json({ message: messages.UNAUTHORIZED });
     }
     return res.status(200).json({
+      id: user.id,
       name: user.name,
       email: user.email,
       token: jwt.sign({ id: user.id }, secret, { expiresIn: "30d" }),
