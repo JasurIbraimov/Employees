@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "server": "nodemon ./bin/www",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "build": "prisma generate && npm run start"
   },
   "dependencies": {
     "@prisma/client": "^5.8.0",
